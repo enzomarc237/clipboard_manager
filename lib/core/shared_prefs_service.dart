@@ -13,6 +13,16 @@ class SharedPrefsService {
     await prefs.setString(key, value);
   }
 
+  Future<int?> getInt(String key) async {
+    final prefs = await _prefs;
+    return prefs.getInt(key);
+  }
+
+  Future<void> setInt(String key, int value) async {
+    final prefs = await _prefs;
+    await prefs.setInt(key, value);
+  }
+
   Future<List<String>?> getStringList(String key) async {
     final prefs = await _prefs;
     return prefs.getStringList(key);
