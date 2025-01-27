@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../core/clipboard_service.dart';
 import '../core/history_manager.dart';
+import '../core/platform_channel_service.dart';
 import '../models/clipboard_item.dart';
 
 class ClipboardProvider with ChangeNotifier {
   final HistoryManager _historyManager = HistoryManager();
   final ClipboardService _clipboardService = ClipboardService();
+  final PlatformChannelService _platformChannelService = PlatformChannelService();
   List<ClipboardItem> _history = [];
   String _searchQuery = "";
   Timer? _timer;
@@ -19,7 +21,13 @@ class ClipboardProvider with ChangeNotifier {
 
   ClipboardProvider() {
     _loadHistory();
-    startPollingClipboard();
+    _platformChannelService.startBackgroundMonitoring();
+    _setupMethodCallHandler();
+  }
+
+  void _setupMethodCallHandler() {
+    // This method would typically be set up in the native code, 
+    // but for demonstration, we'll simulate it here
   }
 
   Future<void> _loadHistory() async {
@@ -32,14 +40,9 @@ class ClipboardProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void startPollingClipboard() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _updateClipboardHistory();
-    });
-  }
-
-  Future<void> _updateClipboardHistory() async {
-    await _historyManager.addHistoryItem();
+  Future<void> addHistoryItemFromNative(String clipboardContent) async {
+    final newClipBoardItem = ClipboardItem(text: clipboardContent, timestamp: DateTime.now());
+    await _historyManager.addHistoryItemFromNative(newClipBoardItem);
     await _loadHistory();
   }
 
@@ -61,7 +64,7 @@ class ClipboardProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _platformChannelService.stopBackgroundMonitoring();
     super.dispose();
   }
 }

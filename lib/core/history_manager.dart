@@ -34,6 +34,21 @@ class HistoryManager {
     await _prefsService.setStringList(_historyKey, newHistory);
   }
 
+  Future<void> addHistoryItemFromNative(ClipboardItem item) async {
+    final history = await getHistory();
+
+    // Check if the item already exists to prevent duplicates
+    if (history.isNotEmpty && history.first.text == item.text) {
+      return;
+    }
+
+    List<String> newHistory = [
+      item.toJson(),
+      ...history.map((item) => item.toJson())
+    ];
+    await _prefsService.setStringList(_historyKey, newHistory);
+  }
+
   Future<void> clearHistory() async {
     await _prefsService.remove(_historyKey);
   }

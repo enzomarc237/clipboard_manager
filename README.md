@@ -1,15 +1,27 @@
 # Clipboard History Manager
 
 ## Overview
-A cross-platform mobile clipboard history manager built with Flutter, supporting both iOS and Android. 
+A cross-platform mobile clipboard history manager built with Flutter, supporting both iOS and Android with advanced background monitoring capabilities.
 
 ## Features
 - Real-time clipboard monitoring
+- Background clipboard tracking on both Android and iOS
 - Local storage of clipboard history
 - Search functionality
 - Copy and delete individual clipboard entries
 - Clear entire clipboard history
 - Timestamp for each clipboard entry
+
+## Background Monitoring
+### Android
+- Uses foreground service for persistent clipboard monitoring
+- Leverages `ClipboardManager` to detect clipboard changes
+- Runs as a foreground service to improve reliability
+
+### iOS
+- Utilizes background fetch and periodic checking
+- Checks clipboard content at regular intervals
+- Respects iOS background task limitations
 
 ## Project Structure
 ```
@@ -18,6 +30,7 @@ clipboard_manager/
 │   ├── core/
 │   │   ├── clipboard_service.dart
 │   │   ├── history_manager.dart
+│   │   ├── platform_channel_service.dart
 │   │   └── shared_prefs_service.dart
 │   ├── models/
 │   │   └── clipboard_item.dart
@@ -47,15 +60,16 @@ clipboard_manager/
 5. Run `flutter run`
 
 ## Usage
-- App automatically tracks clipboard content
+- App automatically tracks clipboard content in the background
 - Search through clipboard history
 - Tap the copy icon to restore a previous clipboard entry
 - Tap the delete icon to remove a specific entry
 - Use the clear all button to reset clipboard history
 
 ## Limitations
-- Background clipboard monitoring may have platform-specific restrictions
-- Requires app to be open to capture clipboard changes
+- Background clipboard monitoring has platform-specific restrictions
+- iOS background monitoring is less consistent due to system limitations
+- Battery and performance impact may vary
 
 ## Contributing
 Contributions are welcome! Please submit pull requests or open issues on the repository.
@@ -63,6 +77,6 @@ Contributions are welcome! Please submit pull requests or open issues on the rep
 ## Future Improvements
 - Enhanced error handling
 - More advanced search functionality
-- Customizable preferences
-- Platform-specific background monitoring
+- Customizable background monitoring preferences
 - Comprehensive testing
+- Improved platform-specific background task management
