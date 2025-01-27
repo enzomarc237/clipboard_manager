@@ -27,4 +27,14 @@ class SharedPrefsService {
     final prefs = await _prefs;
     await prefs.remove(key);
   }
+
+  Future<bool?> getBool(String key) async {
+    final prefs = await _prefs;
+    return prefs.getBool(key);
+  }
+
+  Future<void> setBool(String key, bool value) async {
+    final prefs = await _prefs;
+    await prefs.setBool(key, value);
+  }
 }
